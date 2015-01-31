@@ -8,7 +8,8 @@ ifneq (0.5.0, $(word 1, $(sort 0.5.0 $(PACKER_VERSION))))
 $(error Packer version less than 0.5.x, please upgrade)
 endif
 
-FEDORA21_X86_64 ?= http://mirror.cs.pitt.edu/fedora/linux/releases/test/21-Beta/Server/x86_64/iso/Fedora-Server-DVD-x86_64-21_Beta.iso
+FEDORA21_X86_64 ?= http://mirror.cs.pitt.edu/fedora/linux/releases/21/Server/x86_64/iso/Fedora-Server-DVD-x86_64-21.iso
+FEDORA21_X86_64_CHECKSUM ?= a6a2e83bb409d6b8ee3072ad07faac0a54d79c9ecbe3a40af91b773e2d843d8e
 FEDORA20_X86_64 ?= http://mirrors.kernel.org/fedora/releases/20/Fedora/x86_64/iso/Fedora-20-x86_64-DVD.iso
 FEDORA19_X86_64 ?= http://download.fedoraproject.org/pub/fedora/linux/releases/19/Fedora/x86_64/iso/Fedora-19-x86_64-DVD.iso
 FEDORA18_X86_64 ?= http://mirrors.kernel.org/fedora/releases/18/Fedora/x86_64/iso/Fedora-18-x86_64-DVD.iso
@@ -114,7 +115,9 @@ $(foreach i,$(SHORTCUT_TARGETS),$(eval $(call SHORTCUT,$(i))))
 $(VMWARE_BOX_DIR)/fedora21$(BOX_SUFFIX): fedora21.json $(SOURCES) http/ks.cfg
 	rm -rf $(VMWARE_OUTPUT)
 	mkdir -p $(VMWARE_BOX_DIR)
-	$(PACKER) build -only=$(VMWARE_BUILDER) $(PACKER_VARS) -var "iso_url=$(FEDORA21_X86_64)" $<
+	$(PACKER) build -only=$(VMWARE_BUILDER) $(PACKER_VARS) \
+		-var "iso_url=$(FEDORA21_X86_64)" \
+		-var "iso_checksum=$(FEDORA21_X86_64_CHECKSUM)" $<
 
 $(VMWARE_BOX_DIR)/fedora20$(BOX_SUFFIX): fedora20.json $(SOURCES) http/ks.cfg
 	rm -rf $(VMWARE_OUTPUT)
@@ -161,7 +164,9 @@ $(VMWARE_BOX_DIR)/fedora18-i386$(BOX_SUFFIX): fedora18-i386.json $(SOURCES) http
 $(VIRTUALBOX_BOX_DIR)/fedora21$(BOX_SUFFIX): fedora21.json $(SOURCES) http/ks.cfg
 	rm -rf $(VIRTUALBOX_OUTPUT)
 	mkdir -p $(VIRTUALBOX_BOX_DIR)
-	$(PACKER) build -only=$(VIRTUALBOX_BUILDER) $(PACKER_VARS) -var "iso_url=$(FEDORA21_X86_64)" $<
+	$(PACKER) build -only=$(VIRTUALBOX_BUILDER) $(PACKER_VARS) \
+		-var "iso_url=$(FEDORA21_X86_64)" \
+		-var "iso_checksum=$(FEDORA21_X86_64_CHECKSUM)" $<
 
 $(VIRTUALBOX_BOX_DIR)/fedora20$(BOX_SUFFIX): fedora20.json $(SOURCES) http/ks.cfg
 	rm -rf $(VIRTUALBOX_OUTPUT)
